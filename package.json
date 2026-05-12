@@ -1,0 +1,13 @@
+{
+  "name": "mesa-zap-pro",
+  "version": "0.1.0",
+  "description": "MVP de dashboard, cardapio digital, pedidos via WhatsApp/chatbot e reservas para comercios.",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

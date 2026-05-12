@@ -1,0 +1,241 @@
+{
+  "business": {
+    "name": "Bistro Avenida",
+    "category": "Restaurante casual",
+    "whatsapp": "+55 11 98888-0101",
+    "address": "Av. Central, 1200 - Centro",
+    "openingHours": "Seg a Sab, 11h as 23h",
+    "deliveryFee": 7.5,
+    "minimumOrder": 25
+  },
+  "menu": [
+    {
+      "id": "burger-artesanal",
+      "category": "Lanches",
+      "name": "Burger Artesanal",
+      "description": "Blend da casa, queijo, cebola caramelizada e molho especial.",
+      "price": 34.9,
+      "available": true,
+      "featured": true,
+      "prepMinutes": 18
+    },
+    {
+      "id": "frango-crocante",
+      "category": "Lanches",
+      "name": "Frango Crocante",
+      "description": "File de frango empanado, coleslaw e maionese de ervas.",
+      "price": 31.5,
+      "available": true,
+      "featured": false,
+      "prepMinutes": 16
+    },
+    {
+      "id": "risoto-funghi",
+      "category": "Pratos",
+      "name": "Risoto de Funghi",
+      "description": "Arroz arboreo, cogumelos, parmesao e manteiga trufada.",
+      "price": 48,
+      "available": true,
+      "featured": true,
+      "prepMinutes": 24
+    },
+    {
+      "id": "parmegiana",
+      "category": "Pratos",
+      "name": "Parmegiana Classico",
+      "description": "File empanado, molho da casa, queijo e arroz branco.",
+      "price": 44.9,
+      "available": true,
+      "featured": false,
+      "prepMinutes": 22
+    },
+    {
+      "id": "salada-mediterranea",
+      "category": "Leves",
+      "name": "Salada Mediterranea",
+      "description": "Folhas, grao-de-bico, tomate, pepino, azeitona e feta.",
+      "price": 29.9,
+      "available": true,
+      "featured": false,
+      "prepMinutes": 10
+    },
+    {
+      "id": "brownie-sorvete",
+      "category": "Sobremesas",
+      "name": "Brownie com Sorvete",
+      "description": "Brownie quente, sorvete de creme e calda de chocolate.",
+      "price": 22,
+      "available": true,
+      "featured": true,
+      "prepMinutes": 8
+    },
+    {
+      "id": "suco-natural",
+      "category": "Bebidas",
+      "name": "Suco Natural",
+      "description": "Laranja, limao, abacaxi ou maracuja.",
+      "price": 12.5,
+      "available": true,
+      "featured": false,
+      "prepMinutes": 5
+    },
+    {
+      "id": "limonada-casa",
+      "category": "Bebidas",
+      "name": "Limonada da Casa",
+      "description": "Limao siciliano, hortela e espuma citrica.",
+      "price": 15,
+      "available": true,
+      "featured": false,
+      "prepMinutes": 5
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-1001",
+      "channel": "whatsapp",
+      "source": "ChatBot WhatsApp",
+      "customer": {
+        "name": "Fernanda Lima",
+        "phone": "+55 11 97777-1212"
+      },
+      "items": [
+        {
+          "productId": "burger-artesanal",
+          "name": "Burger Artesanal",
+          "quantity": 2,
+          "unitPrice": 34.9
+        },
+        {
+          "productId": "limonada-casa",
+          "name": "Limonada da Casa",
+          "quantity": 2,
+          "unitPrice": 15
+        }
+      ],
+      "subtotal": 99.8,
+      "deliveryFee": 7.5,
+      "total": 107.3,
+      "status": "preparando",
+      "payment": "pix",
+      "fulfillment": "delivery",
+      "notes": "Entregar na portaria.",
+      "createdAt": "2026-05-12T14:15:00.000-03:00"
+    },
+    {
+      "id": "ORD-1002",
+      "channel": "site",
+      "source": "Cardapio Digital",
+      "customer": {
+        "name": "Carlos Nogueira",
+        "phone": "+55 11 96666-2323"
+      },
+      "items": [
+        {
+          "productId": "risoto-funghi",
+          "name": "Risoto de Funghi",
+          "quantity": 1,
+          "unitPrice": 48
+        },
+        {
+          "productId": "brownie-sorvete",
+          "name": "Brownie com Sorvete",
+          "quantity": 1,
+          "unitPrice": 22
+        }
+      ],
+      "subtotal": 70,
+      "deliveryFee": 0,
+      "total": 70,
+      "status": "novo",
+      "payment": "cartao",
+      "fulfillment": "retirada",
+      "notes": "",
+      "createdAt": "2026-05-12T15:05:00.000-03:00"
+    },
+    {
+      "id": "ORD-1003",
+      "channel": "whatsapp",
+      "source": "ChatBot WhatsApp",
+      "customer": {
+        "name": "Juliana Prado",
+        "phone": "+55 11 95555-3434"
+      },
+      "items": [
+        {
+          "productId": "parmegiana",
+          "name": "Parmegiana Classico",
+          "quantity": 3,
+          "unitPrice": 44.9
+        }
+      ],
+      "subtotal": 134.7,
+      "deliveryFee": 7.5,
+      "total": 142.2,
+      "status": "entregue",
+      "payment": "dinheiro",
+      "fulfillment": "delivery",
+      "notes": "Troco para 200.",
+      "createdAt": "2026-05-11T20:40:00.000-03:00"
+    },
+    {
+      "id": "ORD-1004",
+      "channel": "site",
+      "source": "Cardapio Digital",
+      "customer": {
+        "name": "Rafael Souza",
+        "phone": "+55 11 94444-4545"
+      },
+      "items": [
+        {
+          "productId": "salada-mediterranea",
+          "name": "Salada Mediterranea",
+          "quantity": 2,
+          "unitPrice": 29.9
+        },
+        {
+          "productId": "suco-natural",
+          "name": "Suco Natural",
+          "quantity": 2,
+          "unitPrice": 12.5
+        }
+      ],
+      "subtotal": 84.8,
+      "deliveryFee": 0,
+      "total": 84.8,
+      "status": "confirmado",
+      "payment": "pix",
+      "fulfillment": "mesa",
+      "notes": "Mesa 6.",
+      "createdAt": "2026-05-10T12:25:00.000-03:00"
+    }
+  ],
+  "reservations": [
+    {
+      "id": "RES-501",
+      "customer": {
+        "name": "Bianca Castro",
+        "phone": "+55 11 93333-5656"
+      },
+      "date": "2026-05-12",
+      "time": "20:30",
+      "people": 4,
+      "status": "confirmada",
+      "notes": "Preferencia por mesa externa.",
+      "createdAt": "2026-05-12T11:10:00.000-03:00"
+    },
+    {
+      "id": "RES-502",
+      "customer": {
+        "name": "Henrique Alves",
+        "phone": "+55 11 92222-6767"
+      },
+      "date": "2026-05-13",
+      "time": "19:00",
+      "people": 2,
+      "status": "solicitada",
+      "notes": "Aniversario.",
+      "createdAt": "2026-05-12T12:45:00.000-03:00"
+    }
+  ]
+}

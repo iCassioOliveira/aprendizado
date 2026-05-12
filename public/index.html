@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MesaZap Pro</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">MZ</span>
+          <div>
+            <strong>MesaZap Pro</strong>
+            <small>Operacao comercial</small>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="Navegacao principal">
+          <button class="nav-item active" data-view="dashboard" type="button">
+            <span aria-hidden="true">D</span>
+            Dashboard
+          </button>
+          <button class="nav-item" data-view="orders" type="button">
+            <span aria-hidden="true">P</span>
+            Pedidos
+          </button>
+          <button class="nav-item" data-view="menu" type="button">
+            <span aria-hidden="true">C</span>
+            Cardapio
+          </button>
+          <button class="nav-item" data-view="reservations" type="button">
+            <span aria-hidden="true">R</span>
+            Reservas
+          </button>
+          <button class="nav-item" data-view="integration" type="button">
+            <span aria-hidden="true">I</span>
+            Integracao
+          </button>
+        </nav>
+
+        <div class="sidebar-note">
+          <span class="status-dot"></span>
+          API local ativa
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="businessCategory">Restaurante</p>
+            <h1 id="businessName">MesaZap Pro</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="icon-button" id="refreshButton" type="button" title="Atualizar dados">R</button>
+            <a class="primary-action" id="whatsappLink" href="#" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+        </header>
+
+        <section class="view active" id="dashboardView" aria-labelledby="dashboardTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Central de operacao</p>
+              <h2 id="dashboardTitle">Dashboard</h2>
+            </div>
+            <span class="live-pill">Atualizacao automatica</span>
+          </div>
+
+          <div class="metric-grid" id="metricGrid"></div>
+
+          <div class="dashboard-grid">
+            <section class="panel wide-panel">
+              <div class="panel-header">
+                <h3>Vendas dos ultimos 7 dias</h3>
+                <span>Pedidos e faturamento</span>
+              </div>
+              <div class="chart" id="salesChart"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Canais</h3>
+                <span>Origem dos pedidos</span>
+              </div>
+              <div class="channel-list" id="channelList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Mais vendidos</h3>
+                <span>Ranking por quantidade</span>
+              </div>
+              <div class="ranking-list" id="topProducts"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="ordersView" aria-labelledby="ordersTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">WhatsApp e site</p>
+              <h2 id="ordersTitle">Pedidos recebidos</h2>
+            </div>
+            <button class="secondary-action" id="simulateWhatsAppOrder" type="button">Simular pedido WhatsApp</button>
+          </div>
+
+          <div class="orders-board" id="ordersBoard"></div>
+        </section>
+
+        <section class="view" id="menuView" aria-labelledby="menuTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Experiencia do cliente</p>
+              <h2 id="menuTitle">Cardapio digital</h2>
+            </div>
+            <div class="segmented" id="categoryFilters"></div>
+          </div>
+
+          <div class="menu-layout">
+            <div class="menu-grid" id="menuGrid"></div>
+
+            <aside class="checkout-panel">
+              <div class="panel-header">
+                <h3>Carrinho</h3>
+                <span id="cartCount">0 itens</span>
+              </div>
+
+              <div class="cart-list" id="cartList"></div>
+
+              <form class="checkout-form" id="checkoutForm">
+                <label>
+                  Nome
+                  <input name="name" autocomplete="name" required placeholder="Nome do cliente">
+                </label>
+                <label>
+                  WhatsApp
+                  <input name="phone" autocomplete="tel" required placeholder="+55 11 99999-9999">
+                </label>
+                <div class="form-row">
+                  <label>
+                    Entrega
+                    <select name="fulfillment">
+                      <option value="delivery">Delivery</option>
+                      <option value="retirada">Retirada</option>
+                      <option value="mesa">Consumir no local</option>
+                    </select>
+                  </label>
+                  <label>
+                    Pagamento
+                    <select name="payment">
+                      <option value="pix">Pix</option>
+                      <option value="cartao">Cartao</option>
+                      <option value="dinheiro">Dinheiro</option>
+                    </select>
+                  </label>
+                </div>
+                <label>
+                  Observacoes
+                  <textarea name="notes" rows="3" placeholder="Ex.: sem cebola, mesa 4"></textarea>
+                </label>
+                <div class="checkout-total">
+                  <span>Total</span>
+                  <strong id="cartTotal">R$ 0,00</strong>
+                </div>
+                <button class="primary-action full-width" type="submit">Finalizar pedido</button>
+              </form>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="reservationsView" aria-labelledby="reservationsTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Mesas e agenda</p>
+              <h2 id="reservationsTitle">Reservas</h2>
+            </div>
+          </div>
+
+          <div class="reservation-layout">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Nova reserva</h3>
+                <span>Entrada pelo cardapio digital</span>
+              </div>
+              <form class="reservation-form" id="reservationForm">
+                <label>
+                  Nome
+                  <input name="name" autocomplete="name" required placeholder="Nome do cliente">
+                </label>
+                <label>
+                  WhatsApp
+                  <input name="phone" autocomplete="tel" required placeholder="+55 11 99999-9999">
+                </label>
+                <div class="form-row">
+                  <label>
+                    Data
+                    <input name="date" type="date" required>
+                  </label>
+                  <label>
+                    Horario
+                    <input name="time" type="time" required>
+                  </label>
+                </div>
+                <label>
+                  Pessoas
+                  <input name="people" type="number" min="1" value="2" required>
+                </label>
+                <label>
+                  Observacoes
+                  <textarea name="notes" rows="3" placeholder="Preferencias, ocasiao especial"></textarea>
+                </label>
+                <button class="primary-action full-width" type="submit">Solicitar reserva</button>
+              </form>
+            </section>
+
+            <section class="panel wide-panel">
+              <div class="panel-header">
+                <h3>Agenda</h3>
+                <span>Reservas recebidas</span>
+              </div>
+              <div class="reservation-list" id="reservationList"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="integrationView" aria-labelledby="integrationTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Chatbot e automacao</p>
+              <h2 id="integrationTitle">Integracao WhatsApp</h2>
+            </div>
+          </div>
+
+          <div class="integration-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Webhook de pedidos</h3>
+                <span>Use no provedor do chatbot</span>
+              </div>
+              <code class="code-block">POST /api/whatsapp/orders</code>
+              <p class="muted">O chatbot envia cliente, telefone, itens, pagamento, entrega e observacoes. O pedido entra no dashboard em tempo real apos a requisicao.</p>
+            </section>
+
+            <section class="panel wide-panel">
+              <div class="panel-header">
+                <h3>Contrato JSON</h3>
+                <span>Formato esperado</span>
+              </div>
+              <pre class="json-example">{
+  "customer": { "name": "Marina", "phone": "+55 11 99999-8888" },
+  "items": [
+    { "productId": "burger-artesanal", "quantity": 2 }
+  ],
+  "payment": "pix",
+  "fulfillment": "delivery",
+  "notes": "Sem cebola"
+}</pre>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
