@@ -29,6 +29,37 @@ const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
   minute: "2-digit"
 });
 
+const metricCards = [
+  {
+    key: "revenue",
+    label: "Faturamento hoje",
+    icon: "R$",
+    value: (metrics) => formatCurrency(metrics.todayRevenue),
+    caption: (metrics) => `${metrics.todayOrders || 0} pedidos hoje`
+  },
+  {
+    key: "orders",
+    label: "Pedidos ativos",
+    icon: "PD",
+    value: (metrics) => metrics.activeOrders || 0,
+    caption: () => "Ainda em atendimento"
+  },
+  {
+    key: "ticket",
+    label: "Ticket medio",
+    icon: "TM",
+    value: (metrics) => formatCurrency(metrics.averageTicket),
+    caption: () => "Pedidos nao cancelados"
+  },
+  {
+    key: "reservations",
+    label: "Reservas hoje",
+    icon: "RS",
+    value: (metrics) => metrics.reservationsToday || 0,
+    caption: (metrics) => `${metrics.pendingReservations || 0} pendentes`
+  }
+];
+
 function $(selector) {
   return document.querySelector(selector);
 }
@@ -84,9 +115,11 @@ function setView(viewName) {
 
 function render() {
   renderBusiness();
+  renderCommandCenter();
   renderMetrics();
   renderSalesChart();
   renderChannels();
+  renderStatusFlow();
   renderTopProducts();
   renderOrders();
   renderCategories();
@@ -102,27 +135,36 @@ function renderBusiness() {
 
   $("#businessName").textContent = state.business.name;
   $("#businessCategory").textContent = state.business.category;
+  $("#businessMeta").textContent = `${state.business.address} - ${state.business.openingHours}`;
   const phone = String(state.business.whatsapp || "").replace(/\D/g, "");
   $("#whatsappLink").href = `https://wa.me/${phone}`;
+}
+
+function renderCommandCenter() {
+  const metrics = state.metrics || {};
+  $("#sidebarRevenue").textContent = formatCurrency(metrics.todayRevenue);
+  $("#sidebarOrders").textContent = `${metrics.todayOrders || 0} pedidos`;
+  $("#sidebarReservations").textContent = `${metrics.reservationsToday || 0} reservas`;
+  $("#commandRevenue").textContent = formatCurrency(metrics.todayRevenue);
+  $("#commandRevenueCaption").textContent = `${metrics.todayOrders || 0} pedidos hoje`;
+  $("#commandQueue").textContent = metrics.activeOrders || 0;
+  $("#commandReservations").textContent = metrics.reservationsToday || 0;
 }
 
 function renderMetrics() {
   const metricGrid = $("#metricGrid");
   const metrics = state.metrics || {};
-  const cards = [
-    ["Faturamento hoje", formatCurrency(metrics.todayRevenue), `${metrics.todayOrders || 0} pedidos hoje`],
-    ["Pedidos ativos", metrics.activeOrders || 0, "Ainda em atendimento"],
-    ["Ticket medio", formatCurrency(metrics.averageTicket), "Pedidos nao cancelados"],
-    ["Reservas hoje", metrics.reservationsToday || 0, `${metrics.pendingReservations || 0} pendentes`]
-  ];
 
-  metricGrid.innerHTML = cards
+  metricGrid.innerHTML = metricCards
     .map(
-      ([label, value, caption]) => `
-        <article class="metric-card">
-          <span>${label}</span>
-          <strong>${value}</strong>
-          <small>${caption}</small>
+      (card) => `
+        <article class="metric-card ${card.key}">
+          <div class="metric-top">
+            <span>${card.label}</span>
+            <span class="metric-icon">${card.icon}</span>
+          </div>
+          <strong>${card.value(metrics)}</strong>
+          <small>${card.caption(metrics)}</small>
         </article>
       `
     )
@@ -160,9 +202,38 @@ function renderChannels() {
       const label = channel === "whatsapp" ? "WhatsApp" : "Site";
       const percent = Math.round((count / total) * 100);
       return `
-        <div class="channel-row">
-          <strong>${label}</strong>
-          <span>${count} pedidos - ${percent}%</span>
+        <div>
+          <div class="channel-row">
+            <strong>${label}</strong>
+            <span>${count} pedidos - ${percent}%</span>
+          </div>
+          <div class="channel-meter" aria-hidden="true"><span style="width: ${percent}%"></span></div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderStatusFlow() {
+  const statusFlow = $("#statusFlow");
+  const counts = state.metrics?.statusCounts || {};
+  const entries = Object.entries(statusLabels).map(([key, label]) => ({
+    key,
+    label,
+    count: counts[key] || 0
+  }));
+  const maxCount = Math.max(...entries.map((entry) => entry.count), 1);
+
+  statusFlow.innerHTML = entries
+    .map((entry) => {
+      const width = Math.max((entry.count / maxCount) * 100, entry.count > 0 ? 8 : 2);
+      return `
+        <div class="status-row">
+          <div class="status-row-header">
+            <strong>${entry.label}</strong>
+            <span>${entry.count}</span>
+          </div>
+          <div class="status-meter" aria-hidden="true"><span style="width: ${width}%"></span></div>
         </div>
       `;
     })
@@ -196,7 +267,7 @@ function renderOrders() {
   board.innerHTML = state.orders
     .map(
       (order) => `
-        <article class="order-card">
+        <article class="order-card status-${order.status}">
           <div class="order-card-header">
             <div>
               <strong>${order.id}</strong>
@@ -209,7 +280,7 @@ function renderOrders() {
             <span>${order.customer.phone}</span>
             <span>${order.fulfillment} - ${order.payment}</span>
           </div>
-          <div>
+          <div class="order-lines">
             ${order.items
               .map(
                 (item) => `
@@ -249,6 +320,15 @@ function renderOrders() {
   });
 }
 
+function slugCategory(category) {
+  return String(category || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 function renderCategories() {
   const filters = $("#categoryFilters");
   const categories = ["Todos", ...new Set(state.menu.map((item) => item.category))];
@@ -275,25 +355,38 @@ function renderMenu() {
   const products = state.category === "Todos"
     ? state.menu
     : state.menu.filter((item) => item.category === state.category);
+  const availableCount = state.menu.filter((item) => item.available).length;
+
+  $("#menuShowcaseMeta").textContent = `${availableCount} itens disponiveis`;
 
   menuGrid.innerHTML = products
     .map(
-      (product) => `
+      (product) => {
+        const categorySlug = slugCategory(product.category);
+        return `
         <article class="menu-card">
-          <div class="menu-card-visual">${product.category}</div>
+          <div class="menu-card-visual" data-category="${categorySlug}">
+            <span class="visual-label">${product.category}</span>
+            <span class="visual-dish" aria-hidden="true"></span>
+          </div>
           <div>
             <h3>${product.name}</h3>
             <p>${product.description}</p>
           </div>
+          <div class="menu-tags">
+            <span class="menu-tag">${product.prepMinutes} min</span>
+            <span class="menu-tag">${product.featured ? "Destaque" : "Disponivel"}</span>
+          </div>
           <div class="menu-card-footer">
             <div>
               <div class="price">${formatCurrency(product.price)}</div>
-              <div class="muted">${product.prepMinutes} min</div>
+              <div class="muted">${product.available ? "Pronto para venda" : "Indisponivel"}</div>
             </div>
             <button class="add-button" data-product-id="${product.id}" type="button" title="Adicionar ${product.name}">+</button>
           </div>
         </article>
-      `
+      `;
+      }
     )
     .join("");
 

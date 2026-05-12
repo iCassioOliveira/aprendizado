@@ -10,39 +10,50 @@
     <div class="app-shell">
       <aside class="sidebar">
         <div class="brand">
-          <span class="brand-mark">MZ</span>
+          <span class="brand-mark">
+            <span>MZ</span>
+          </span>
           <div>
             <strong>MesaZap Pro</strong>
-            <small>Operacao comercial</small>
+            <small>Commerce OS</small>
           </div>
         </div>
 
         <nav class="nav-list" aria-label="Navegacao principal">
           <button class="nav-item active" data-view="dashboard" type="button">
-            <span aria-hidden="true">D</span>
-            Dashboard
+            <span class="nav-icon dashboard-icon" aria-hidden="true"></span>
+            <span>Dashboard</span>
           </button>
           <button class="nav-item" data-view="orders" type="button">
-            <span aria-hidden="true">P</span>
-            Pedidos
+            <span class="nav-icon orders-icon" aria-hidden="true"></span>
+            <span>Pedidos</span>
           </button>
           <button class="nav-item" data-view="menu" type="button">
-            <span aria-hidden="true">C</span>
-            Cardapio
+            <span class="nav-icon menu-icon" aria-hidden="true"></span>
+            <span>Cardapio</span>
           </button>
           <button class="nav-item" data-view="reservations" type="button">
-            <span aria-hidden="true">R</span>
-            Reservas
+            <span class="nav-icon reservations-icon" aria-hidden="true"></span>
+            <span>Reservas</span>
           </button>
           <button class="nav-item" data-view="integration" type="button">
-            <span aria-hidden="true">I</span>
-            Integracao
+            <span class="nav-icon integration-icon" aria-hidden="true"></span>
+            <span>Integracao</span>
           </button>
         </nav>
 
+        <div class="sidebar-card">
+          <span>Hoje</span>
+          <strong id="sidebarRevenue">R$ 0,00</strong>
+          <div>
+            <small id="sidebarOrders">0 pedidos</small>
+            <small id="sidebarReservations">0 reservas</small>
+          </div>
+        </div>
+
         <div class="sidebar-note">
           <span class="status-dot"></span>
-          API local ativa
+          <span>API local ativa</span>
         </div>
       </aside>
 
@@ -51,10 +62,16 @@
           <div>
             <p class="eyebrow" id="businessCategory">Restaurante</p>
             <h1 id="businessName">MesaZap Pro</h1>
+            <p class="business-meta" id="businessMeta">Pedidos, reservas e cardapio em uma unica operacao.</p>
           </div>
           <div class="topbar-actions">
-            <button class="icon-button" id="refreshButton" type="button" title="Atualizar dados">R</button>
-            <a class="primary-action" id="whatsappLink" href="#" target="_blank" rel="noreferrer">WhatsApp</a>
+            <button class="icon-button" id="refreshButton" type="button" title="Atualizar dados" aria-label="Atualizar dados">
+              <span class="refresh-mark" aria-hidden="true"></span>
+            </button>
+            <a class="primary-action" id="whatsappLink" href="#" target="_blank" rel="noreferrer">
+              <span class="whatsapp-mark" aria-hidden="true"></span>
+              WhatsApp
+            </a>
           </div>
         </header>
 
@@ -65,6 +82,31 @@
               <h2 id="dashboardTitle">Dashboard</h2>
             </div>
             <span class="live-pill">Atualizacao automatica</span>
+          </div>
+
+          <div class="command-strip">
+            <section class="command-hero">
+              <div>
+                <span class="command-label">Receita monitorada</span>
+                <strong id="commandRevenue">R$ 0,00</strong>
+                <small id="commandRevenueCaption">0 pedidos hoje</small>
+              </div>
+              <div class="pulse-stack" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </section>
+            <section class="command-mini">
+              <span>Fila ativa</span>
+              <strong id="commandQueue">0</strong>
+              <small>Pedidos em andamento</small>
+            </section>
+            <section class="command-mini accent">
+              <span>Reserva</span>
+              <strong id="commandReservations">0</strong>
+              <small>Mesas para hoje</small>
+            </section>
           </div>
 
           <div class="metric-grid" id="metricGrid"></div>
@@ -84,6 +126,14 @@
                 <span>Origem dos pedidos</span>
               </div>
               <div class="channel-list" id="channelList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Fluxo da cozinha</h3>
+                <span>Status dos pedidos</span>
+              </div>
+              <div class="status-flow" id="statusFlow"></div>
             </section>
 
             <section class="panel">
@@ -118,7 +168,16 @@
           </div>
 
           <div class="menu-layout">
-            <div class="menu-grid" id="menuGrid"></div>
+            <div>
+              <div class="menu-showcase">
+                <div>
+                  <span>Vitrine online</span>
+                  <strong>Cardapio vivo, pronto para vender</strong>
+                </div>
+                <small id="menuShowcaseMeta">0 itens disponiveis</small>
+              </div>
+              <div class="menu-grid" id="menuGrid"></div>
+            </div>
 
             <aside class="checkout-panel">
               <div class="panel-header">
@@ -236,10 +295,10 @@
             <section class="panel">
               <div class="panel-header">
                 <h3>Webhook de pedidos</h3>
-                <span>Use no provedor do chatbot</span>
+                <span>Entrada WhatsApp</span>
               </div>
               <code class="code-block">POST /api/whatsapp/orders</code>
-              <p class="muted">O chatbot envia cliente, telefone, itens, pagamento, entrega e observacoes. O pedido entra no dashboard em tempo real apos a requisicao.</p>
+              <p class="muted">Pedidos entram no dashboard assim que o chatbot publica o JSON.</p>
             </section>
 
             <section class="panel wide-panel">
