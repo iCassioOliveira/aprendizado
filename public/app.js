@@ -8,6 +8,8 @@ const state = {
   category: "Todos"
 };
 
+const THEME_KEY = "mesazap-theme";
+
 const statusLabels = {
   novo: "Novo",
   confirmado: "Confirmado",
@@ -78,6 +80,31 @@ function showToast(message) {
   toast.classList.add("visible");
   window.clearTimeout(showToast.timeout);
   showToast.timeout = window.setTimeout(() => toast.classList.remove("visible"), 3200);
+}
+
+function getInitialTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY);
+
+  if (savedTheme === "dark" || savedTheme === "light") {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem(THEME_KEY, theme);
+
+  const label = $("#themeToggleLabel");
+  if (label) {
+    label.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.dataset.theme || getInitialTheme();
+  applyTheme(currentTheme === "dark" ? "light" : "dark");
 }
 
 async function api(path, options = {}) {
@@ -578,6 +605,7 @@ function setupEvents() {
     showToast("Dados atualizados.");
   });
 
+  $("#themeToggle").addEventListener("click", toggleTheme);
   $("#checkoutForm").addEventListener("submit", submitCheckout);
   $("#reservationForm").addEventListener("submit", submitReservation);
   $("#simulateWhatsAppOrder").addEventListener("click", simulateWhatsAppOrder);
@@ -586,6 +614,7 @@ function setupEvents() {
   dateInput.value = new Date().toISOString().slice(0, 10);
 }
 
+applyTheme(getInitialTheme());
 setupEvents();
 loadState().catch((error) => {
   console.error(error);
